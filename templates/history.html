@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Sensor history{% endblock %}
+{% block breadcrumb %}Sensor history{% endblock %}
+{% block content %}
+<section class="page-heading compact-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> LOCAL ARDUINO DATA</div><h1>Sensor history<span class="heading-dot">.</span></h1><p>Explore, filter, and export readings collected by your local sensors.</p></div><button class="button-primary" id="export-csv"><i class="fa-solid fa-download"></i> Export CSV</button></section>
+<section class="panel history-panel">
+  <div class="history-toolbar">
+    <div class="range-tabs" role="group" aria-label="Time range">
+      <button class="range-button active" data-range="1h">1 hour</button><button class="range-button" data-range="6h">6 hours</button><button class="range-button" data-range="24h">24 hours</button><button class="range-button" data-range="7d">7 days</button><button class="range-button" data-range="all">All</button>
+    </div>
+    <div class="filter-controls"><label class="search-field"><i class="fa-solid fa-magnifying-glass"></i><input id="history-search" type="search" placeholder="Search sensor readings…" aria-label="Search sensor readings"></label><label class="date-input">From <input type="datetime-local" id="date-from"></label><label class="date-input">To <input type="datetime-local" id="date-to"></label><button class="button-secondary" id="apply-dates">Apply</button></div>
+  </div>
+  <div class="chart-heading-row"><div><h2>Sensor trends</h2><p>Each local sensor has an independent chart and measurement scale.</p></div><span class="records-count" id="history-count">Loading…</span></div>
+  <div class="history-charts-grid">
+    <article class="history-series-card"><div class="history-series-heading"><div><h3>Temperature</h3><p>DHT11 · ambient temperature</p></div><span class="unit-chip">°C</span></div><div class="chart-container history-chart"><canvas id="history-temperature-chart" aria-label="Temperature history in degrees Celsius"></canvas></div></article>
+    <article class="history-series-card"><div class="history-series-heading"><div><h3>Humidity</h3><p>DHT11 · relative humidity</p></div><span class="unit-chip">%</span></div><div class="chart-container history-chart"><canvas id="history-humidity-chart" aria-label="Relative humidity history in percent"></canvas></div></article>
+    <article class="history-series-card"><div class="history-series-heading"><div><h3>MQ-135 air sensor</h3><p>A0 · raw analog reading (0–1023), not AQI or ppm</p></div><span class="unit-chip">RAW</span></div><div class="chart-container history-chart"><canvas id="history-air-quality-chart" aria-label="MQ-135 raw analog history from 0 to 1023"></canvas></div></article>
+    <article class="history-series-card"><div class="history-series-heading"><div><h3>Rain sensor</h3><p>A1 · raw analog reading (0–1023), not rainfall</p></div><span class="unit-chip">RAW</span></div><div class="chart-container history-chart"><canvas id="history-rain-value-chart" aria-label="Rain sensor raw analog history from 0 to 1023"></canvas></div></article>
+  </div>
+  <div class="table-heading"><div><h2>Recorded readings</h2><p>Newest measurements appear first</p></div><div class="table-page-size">Rows <select id="page-size"><option>10</option><option>25</option><option>50</option></select></div></div>
+  <div class="table-responsive"><table class="data-table"><thead><tr><th>TIME</th><th>TEMPERATURE</th><th>HUMIDITY</th><th>MQ-135 RAW</th><th>RAIN RAW</th></tr></thead><tbody id="history-rows"><tr><td colspan="5" class="empty-state">Loading readings…</td></tr></tbody></table></div>
+  <div class="pagination-row"><span id="page-summary">—</span><div><button class="pagination-button" id="previous-page" aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button><span id="page-number">1 / 1</span><button class="pagination-button" id="next-page" aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button></div></div>
+</section>
+<p class="page-footnote"><i class="fa-solid fa-circle-info"></i> Air and rain columns are raw 10-bit analog readings (0–1023); they are not calibrated AQI, ppm, or rainfall measurements.</p>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/charts.js') }}"></script>{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block breadcrumb %}Overview{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR ENVIRONMENT, AT A GLANCE</div><h1>Good to see you<span class="heading-dot">.</span></h1><p>Live readings from your Arduino, alongside independent local weather.</p></div>
+  <div class="heading-meta"><span class="meta-label">LAST SENSOR UPDATE</span><strong id="last-updated">Waiting for Arduino…</strong><span class="refresh-indicator"><i class="fa-solid fa-rotate"></i> Auto-refresh every 2 seconds</span></div>
+</section>
+
+<section class="sensor-grid" aria-label="Local Arduino sensor readings">
+  <article class="metric-card metric-temperature">
+    <div class="metric-top"><span class="metric-icon"><i class="fa-solid fa-temperature-half"></i></span><span class="metric-source">ARDUINO · DHT11</span><span class="metric-menu"><i class="fa-solid fa-ellipsis"></i></span></div>
+    <div class="metric-label">Temperature</div><div class="metric-value"><span id="temperature-value">--</span><small>°C</small></div>
+    <div class="metric-bottom"><span class="metric-note" id="temperature-note">Waiting for sensor data</span><span class="metric-spark"><i class="fa-solid fa-arrow-trend-up"></i></span></div>
+  </article>
+  <article class="metric-card metric-humidity">
+    <div class="metric-top"><span class="metric-icon"><i class="fa-solid fa-droplet"></i></span><span class="metric-source">ARDUINO · DHT11</span><span class="metric-menu"><i class="fa-solid fa-ellipsis"></i></span></div>
+    <div class="metric-label">Humidity</div><div class="metric-value"><span id="humidity-value">--</span><small>%</small></div>
+    <div class="metric-bottom"><span class="metric-note">Relative humidity · local sensor</span><span class="metric-spark"><i class="fa-solid fa-water"></i></span></div>
+  </article>
+  <article class="metric-card metric-air">
+    <div class="metric-top"><span class="metric-icon"><i class="fa-solid fa-wind"></i></span><span class="metric-source">ARDUINO · MQ-135</span><span class="metric-menu"><i class="fa-solid fa-ellipsis"></i></span></div>
+    <div class="metric-label">Air sensor</div><div class="metric-value"><span id="air-value">--</span><small>raw</small></div>
+    <div class="metric-bottom"><span class="metric-note">Analog reading · not AQI or ppm</span><span class="metric-spark"><i class="fa-solid fa-chart-simple"></i></span></div>
+  </article>
+  <article class="metric-card metric-rain">
+    <div class="metric-top"><span class="metric-icon"><i class="fa-solid fa-cloud-rain"></i></span><span class="metric-source">ARDUINO · RAIN SENSOR</span><span class="metric-menu"><i class="fa-solid fa-ellipsis"></i></span></div>
+    <div class="metric-label">Rain sensor</div><div class="metric-value"><span id="rain-value">--</span><small>/ 1023</small></div>
+    <div class="metric-bottom"><span class="metric-note" id="rain-note">Raw analog reading</span><span class="metric-spark"><i class="fa-solid fa-cloud-showers-heavy"></i></span></div>
+  </article>
+</section>
+
+<section class="content-grid dashboard-grid">
+  <article class="panel weather-panel">
+    <div class="panel-heading"><div><div class="eyebrow">EXTERNAL WEATHER · OPEN-METEO</div><h2>Local forecast</h2></div><button class="text-button" id="weather-refresh" title="Refresh weather"><i class="fa-solid fa-rotate"></i></button></div>
+    <div class="weather-main" id="weather-content"><div class="loading-state"><span class="spinner"></span>Loading weather…</div></div>
+    <div class="weather-details" id="weather-details"></div>
+    <div class="forecast-strip" id="hourly-forecast"></div>
+    <div class="daily-forecast" id="daily-forecast"></div>
+    <div class="weather-location"><i class="fa-solid fa-location-dot"></i><span id="weather-location">Visakhapatnam, Andhra Pradesh, India</span><span class="source-tag">API DATA · NOT ARDUINO</span></div>
+  </article>
+  <article class="panel status-panel">
+    <div class="panel-heading"><div><div class="eyebrow">SYSTEM HEALTH</div><h2>Connections</h2></div><span class="panel-heading-icon"><i class="fa-solid fa-heart-pulse"></i></span></div>
+    <div class="health-row"><span class="health-icon health-green"><i class="fa-solid fa-microchip"></i></span><div class="health-copy"><strong>Arduino UNO</strong><small id="arduino-status-detail">Waiting for valid sensor JSON</small></div><span class="health-state offline" id="arduino-state"><i class="status-dot dot-offline"></i> Disconnected</span></div>
+    <div class="health-row"><span class="health-icon health-blue"><i class="fa-solid fa-database"></i></span><div class="health-copy"><strong>SQLite database</strong><small id="database-status-detail">Checking storage</small></div><span class="health-state" id="database-state"><i class="status-dot"></i> Checking</span></div>
+    <div class="health-row"><span class="health-icon health-orange"><i class="fa-solid fa-cloud-sun"></i></span><div class="health-copy"><strong>Weather service</strong><small>Open-Meteo · free API</small></div><span class="health-state" id="weather-state"><i class="status-dot"></i> Checking</span></div>
+    <div class="sensor-error-note" id="sensor-error-note"><i class="fa-solid fa-circle-info"></i> Sensor data has not arrived yet. Check COM3 and close Arduino Serial Monitor.</div>
+    <a class="panel-link" href="/settings">Configure your system <i class="fa-solid fa-arrow-right"></i></a>
+  </article>
+</section>
+
+<section class="content-grid lower-grid">
+  <article class="panel chart-panel">
+    <div class="panel-heading"><div><div class="eyebrow">LOCAL SENSOR HISTORY</div><h2>Temperature & humidity</h2></div><a class="text-button" href="/history">View history <i class="fa-solid fa-arrow-right"></i></a></div>
+    <div class="chart-container chart-dashboard"><canvas id="overview-chart" aria-label="Temperature and humidity history chart"></canvas></div>
+    <div class="chart-legend"><span><i class="legend-dot legend-temp"></i>Temperature (°C)</span><span><i class="legend-dot legend-hum"></i>Humidity (%)</span></div>
+  </article>
+  <article class="panel alerts-panel">
+    <div class="panel-heading"><div><div class="eyebrow">THRESHOLD MONITORING</div><h2>Recent alerts</h2></div><a class="text-button" href="/settings">Thresholds <i class="fa-solid fa-arrow-right"></i></a></div>
+    <div id="recent-alerts" class="alert-list"><div class="empty-state">No alerts yet. Your sensor readings will be checked against configured thresholds.</div></div>
+  </article>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/charts.js') }}"></script>{% endblock %}

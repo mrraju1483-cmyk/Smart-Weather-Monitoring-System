@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Trend analysis{% endblock %}
+{% block breadcrumb %}Trend analysis{% endblock %}
+{% block content %}
+<section class="page-heading compact-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> EXPERIMENTAL MACHINE LEARNING</div><h1>Trend analysis<span class="heading-dot">.</span></h1><p>Simple linear regression learns from your recent local sensor history.</p></div><button class="button-secondary" id="analysis-refresh"><i class="fa-solid fa-rotate"></i> Refresh analysis</button></section>
+<section class="analysis-summary-grid">
+  <article class="panel analysis-status-card"><span class="summary-icon"><i class="fa-solid fa-brain"></i></span><div><div class="eyebrow">MODEL STATUS</div><h2 id="model-status">Checking data…</h2><p id="model-message">Loading historical sensor readings</p></div></article>
+  <article class="panel analysis-status-card"><span class="summary-icon summary-icon-blue"><i class="fa-solid fa-database"></i></span><div><div class="eyebrow">AVAILABLE DATASET</div><h2><span id="dataset-size">—</span> <small>readings</small></h2><p>At least 10 readings are needed to train each trend.</p></div></article>
+</section>
+<section class="analysis-grid" id="analysis-charts">
+  <article class="panel analysis-chart-card"><div class="panel-heading"><div><div class="eyebrow">LINEAR REGRESSION</div><h2>Temperature trend</h2></div><span class="unit-chip">°C</span></div><div class="chart-container analysis-chart"><canvas id="temperature-analysis"></canvas></div><div class="metric-footer" id="temperature-metrics">Awaiting analysis</div></article>
+  <article class="panel analysis-chart-card"><div class="panel-heading"><div><div class="eyebrow">LINEAR REGRESSION</div><h2>Humidity trend</h2></div><span class="unit-chip">%</span></div><div class="chart-container analysis-chart"><canvas id="humidity-analysis"></canvas></div><div class="metric-footer" id="humidity-metrics">Awaiting analysis</div></article>
+  <article class="panel analysis-chart-card"><div class="panel-heading"><div><div class="eyebrow">LINEAR REGRESSION</div><h2>MQ-135 raw trend</h2></div><span class="unit-chip">RAW</span></div><div class="chart-container analysis-chart"><canvas id="air_quality-analysis"></canvas></div><div class="metric-footer" id="air_quality-metrics">Awaiting analysis</div></article>
+</section>
+<div class="notice-banner"><i class="fa-solid fa-triangle-exclamation"></i><div><strong>Demonstration only — not a forecast.</strong> Estimates are experimental trends from your recent sensor readings and can be unreliable. An MQ-135 analog value is not a certified AQI or ppm measurement. A rain sensor alone cannot predict rainfall.</div></div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/charts.js') }}"></script>{% endblock %}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7fb">
+  <title>{% block title %}Environment Monitor{% endblock %} · Atmos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="/">
+        <span class="brand-mark"><i class="fa-solid fa-leaf"></i></span>
+        <span><strong>atmos</strong><small>ENVIRONMENT OS</small></span>
+      </a>
+      <div class="nav-caption">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Main navigation">
+        <a class="{% if page == 'dashboard' %}active{% endif %}" href="/"><i class="fa-solid fa-border-all"></i> Overview</a>
+        <a class="{% if page == 'history' %}active{% endif %}" href="/history"><i class="fa-solid fa-chart-line"></i> Sensor history</a>
+        <a class="{% if page == 'analytics' %}active{% endif %}" href="/analytics"><i class="fa-solid fa-wand-magic-sparkles"></i> Trend analysis <span class="nav-tag">ML</span></a>
+        <a class="{% if page == 'settings' %}active{% endif %}" href="/settings"><i class="fa-solid fa-sliders"></i> Settings</a>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="connection-card">
+        <span class="connection-icon"><i class="fa-solid fa-microchip"></i></span>
+        <div><strong>Arduino UNO</strong><small id="sidebar-serial-status">Connecting…</small></div>
+        <span class="status-dot" id="sidebar-status-dot"></span>
+      </div>
+      <div class="sidebar-footer">SMART ENVIRONMENT MONITOR<br><span>Local sensors · Open-Meteo weather</span></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menu-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+        <div class="breadcrumb-label">{% block breadcrumb %}Overview{% endblock %}<span> / </span><span class="muted">Environment monitor</span></div>
+        <div class="topbar-actions">
+          <span class="live-pill"><span class="pulse-dot"></span> LIVE</span>
+          <button class="icon-button" id="theme-toggle" title="Toggle light and dark theme" aria-label="Toggle theme"><i class="fa-regular fa-moon"></i></button>
+          <div class="avatar">SM</div>
+        </div>
+      </header>
+      <div class="page-content">{% block content %}{% endblock %}</div>
+    </main>
+  </div>
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

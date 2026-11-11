@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block breadcrumb %}Settings{% endblock %}
+{% block content %}
+<section class="page-heading compact-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> PERSONALIZE YOUR MONITOR</div><h1>Settings<span class="heading-dot">.</span></h1><p>Configure weather location and local sensor alert thresholds.</p></div></section>
+<div class="settings-grid">
+  <section class="panel settings-panel">
+    <div class="panel-heading"><div><div class="eyebrow">OPEN-METEO WEATHER</div><h2>Location</h2></div><span class="panel-heading-icon"><i class="fa-solid fa-location-dot"></i></span></div>
+    <p class="settings-description">Weather information is fetched from Open-Meteo and is separate from your Arduino's DHT11 reading.</p>
+    <form id="location-form">
+      <label class="form-label" for="location-name">Location name</label><input class="form-control" id="location-name" maxlength="100" required placeholder="e.g. Visakhapatnam, India">
+      <div class="form-row"><div><label class="form-label" for="latitude">Latitude</label><input class="form-control" id="latitude" type="number" step="any" min="-90" max="90" required></div><div><label class="form-label" for="longitude">Longitude</label><input class="form-control" id="longitude" type="number" step="any" min="-180" max="180" required></div></div>
+      <button class="button-primary settings-save" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save location</button>
+    </form>
+  </section>
+  <section class="panel settings-panel">
+    <div class="panel-heading"><div><div class="eyebrow">LOCAL ARDUINO SENSORS</div><h2>Alert thresholds</h2></div><span class="panel-heading-icon"><i class="fa-solid fa-bell"></i></span></div>
+    <p class="settings-description">Alerts are recorded in the dashboard history. No buzzer is used.</p>
+    <form id="threshold-form">
+      <label class="form-label" for="temperature-threshold">High temperature (°C)</label><input class="form-control" id="temperature-threshold" type="number" min="-40" max="85" step="0.1" required>
+      <label class="form-label" for="humidity-threshold">High humidity (%)</label><input class="form-control" id="humidity-threshold" type="number" min="0" max="100" step="0.1" required>
+      <label class="form-label" for="air-threshold">High MQ-135 raw reading (0–1023)</label><input class="form-control" id="air-threshold" type="number" min="0" max="1023" step="1" required><div class="form-hint">Raw analog value only; not a certified AQI or ppm value.</div>
+      <label class="form-label" for="rain-threshold">Wet sensor when reading is at or below (0–1023)</label><input class="form-control" id="rain-threshold" type="number" min="0" max="1023" step="1" required><div class="form-hint">Confirm whether your particular rain-sensor module reads low when wet.</div>
+      <button class="button-primary settings-save" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save thresholds</button>
+    </form>
+  </section>
+</div>
+<section class="panel serial-settings">
+  <div><div class="eyebrow">ARDUINO SERIAL CONNECTION</div><h2>COM port status</h2><p>Configured port: <strong id="configured-port">COM3</strong> · 9600 baud</p><p class="serial-help">The port and baud rate are configured in the project's <code>.env</code> file. Close Arduino IDE Serial Monitor before running the Flask server, because Windows only allows one application to use COM3 at a time.</p></div>
+  <div class="port-list"><strong>Detected serial ports</strong><div id="ports-list">Checking ports…</div></div>
+</section>
+<section class="panel alerts-history">
+  <div class="panel-heading"><div><div class="eyebrow">THRESHOLD EVENTS</div><h2>Alert history</h2></div></div>
+  <div class="table-responsive"><table class="data-table"><thead><tr><th>TIME</th><th>ALERT</th><th>DETAIL</th><th>READING</th></tr></thead><tbody id="settings-alert-rows"><tr><td colspan="4" class="empty-state">Loading alert history…</td></tr></tbody></table></div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/settings.js') }}"></script>{% endblock %}
